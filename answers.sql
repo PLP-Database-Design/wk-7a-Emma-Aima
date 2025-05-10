@@ -3,12 +3,15 @@
 CREATE TABLE ProductDetail (
     OrderID INT,
     CustomerName VARCHAR(100),
-    Products VARCHAR(255)
+    Products VARCHAR(100)
 );
 
 INSERT INTO ProductDetail (OrderID, CustomerName, Products) VALUES
-(101, 'John Doe', 'Laptop, Mouse'),
-(102, 'Jane Smith', 'Tablet, Keyboard, Mouse'),
+(101, 'John Doe', 'Laptop'),
+(101, 'John Doe', 'Mouse'),
+(102, 'Jane Smith', 'Tablet'), 
+(102, 'Jane Smith', 'Keyboard'),
+(102, 'Jane Smith', 'Mouse'),
 (103, 'Emily Clark', 'Phone');
 
 /* Question 1: Transform to 1NF
@@ -46,9 +49,31 @@ CREATE TABLE Orders (
 );
 
 /* Insert unique orders into the orders table */
-INSERT INTO Orders (OrderID, CustomerName)
+INSERT INTO Orders (OrderID, CustomerName) 
 SELECT DISTINCT OrderID, CustomerName
 FROM ProductDetail;
+
+INSERT INTO Orders (OrderID, CustomerName) VALUES
+(101, 'John Doe'),
+(102, 'Jane Smith'),
+(103, 'Emily Clark');
+
+/* Products Table */
+CREATE TABLE product(
+    product_id INT primary key,
+    productName varchar(100),
+    quantity INT,
+    order_id INT,
+    FOREIGN KEY(order_id) references orders(OrderID)
+);
+
+INSERT INTO Product (product_id, productName, quanitity, order_id) VALUES
+(1, 'Laptop', 2, 101),
+(2, 'Mouse', 1, 101),
+(3, 'Tablet', 3, 102),
+(4, 'Keyboard', 1, 102),
+(5, 'Mouse', 2, 102),
+(6, 'Phone', 1, 103);
 
 /* Now the tables are properly normalized:
 Orders table contains order information (2NF)
